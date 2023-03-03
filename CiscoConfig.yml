@@ -1,27 +1,11 @@
 ---
-- name: Configure Cisco Router Interfaces
-  hosts: cisco_router
-  gather_facts: no
-  vars:
-    interfaces:
-      - name: GigabitEthernet0/0
-        ip_address: 10.0.0.1
-        netmask: 255.255.255.0
-      - name: GigabitEthernet0/1
-        ip_address: 10.0.1.1
-        netmask: 255.255.255.0
+- hosts: cisco
+  gather-facts: false
+  connection: local
 
   tasks:
-    - name: Configure router interfaces
+    - name: Change hostname 
       ios_config:
         lines:
-          - interface {{ item.name }}
-          - ip address {{ item.ip_address }} {{ item.netmask }}
-        parents: interface {{ item.name }}
-        provider:
-          host: "{{ inventory_hostname }}"
-          username: "{{ ansible_user }}"
-          password: "{{ ansible_password }}"
-          authorize: yes
-          auth_pass: "{{ ansible_enable_password }}"
-      with_items: "{{ interfaces }}"
+          - hostname R-Changed
+
