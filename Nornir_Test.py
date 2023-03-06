@@ -1,5 +1,5 @@
 from nornir import InitNornir
-from nornir_netmiko.tasks import netmoiko_send_config
+from nornir_netmiko.tasks import netmiko_send_config
 #Commit
 
 def change_hostname(task, new_hostname):
