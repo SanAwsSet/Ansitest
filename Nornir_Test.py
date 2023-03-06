@@ -1,6 +1,15 @@
-from nornir.core.inventory import Host, Group, Defaults
-import json
+from nornir import InitNornir
+from nornir_utils.plugins.functions import print_result
+from nornir_napalm.plugins.tasks import napalm_get
 
-print(json.dumps(Host.schema(), indent=4))
-print(json.dumps(Group.schema(), indent=4))
-print(json.dumps(Defaults.schema(), indent=4))
+nr = InitNornir(
+    config_file="config.yaml", dry_run=True
+)
+
+
+results = nr.run(
+    task=napalm_get, getters=["facts"]
+)
+
+
+print_result(results)
