@@ -1,18 +1,23 @@
 from nornir import InitNornir
-from nornir_utils.plugins.functions import print_result
-from nornir_napalm.plugins.tasks import napalm_get
-import warnings
-warnings.filterwarnings('ignore')
-warnings.simplefilter('ignore')
+from nornir.plugins.tasks.networking import netmiko_send_command, netmiko_send_config
 
-nr = InitNornir(
-    config_file="config.yaml", dry_run=True
-)
+def change_hostname(task, new_hostname):
+    # Use Netmiko to configure the new hostname on the device
+    commands = [f"hostname {new_hostname}"]
+    task.run(task=netmiko_send_config, config_commands=commands)
 
+def main():
+    # Initialize Nornir with the inventory file and any additional options
+    nr = InitNornir(config_file="config.yaml")
 
-results = nr.run(
-    task=napalm_get, getters=["facts"]
-)
+    # Get the new hostname from user input
+    new_hostname = input("Enter the new hostname: ")
 
+    # Filter the devices to only include Cisco routers
+    cisco_routers = nr.filter(platform="cisco_ios")
 
-print_result(results)
+    # Use Nornir to execute the change_hostname function on each device in parallel
+    cisco_routers.run(task=change_hostname, new_hostname=new_hostname)
+
+if __name__ == "__main__":
+    main()
