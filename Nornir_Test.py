@@ -1,5 +1,5 @@
 from nornir import InitNornir
-from nornir.plugins.tasks.networking import netmiko_send_command, netmiko_send_config
+from nornir.plugins.tasks import netmiko_send_command, netmiko_send_config
 
 def change_hostname(task, new_hostname):
     # Use Netmiko to configure the new hostname on the device
